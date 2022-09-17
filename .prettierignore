@@ -1,0 +1,8 @@
+# Ignore artifacts:
+build
+dist
+types
+
+# Ignore all HTML files:
+*.html
+*.d.ts
