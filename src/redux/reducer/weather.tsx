@@ -1,7 +1,6 @@
-import { ActionInterface } from "../../types/AtionInterface";
+import { ActionInterface } from '../../types/AtionInterface';
 
-const initialState = {
-};
+const initialState = {};
 
 const MoviesReducer = (state = initialState, action: ActionInterface) => {
 	switch (action.type) {

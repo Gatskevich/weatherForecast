@@ -5,15 +5,13 @@ import { StackScreen } from './src/navigation/baseNavigation';
 import store from './src/redux/store';
 
 const App = () => {
-
-  return (
-    <Provider store={store}>
-      <NavigationContainer>
-        <StackScreen />
-      </NavigationContainer>
-  </Provider>
-  );
+	return (
+		<Provider store={store}>
+			<NavigationContainer>
+				<StackScreen />
+			</NavigationContainer>
+		</Provider>
+	);
 };
-
 
 export default App;
