@@ -4,6 +4,8 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "jsx": "react",
+    "typeRoots": ["./src/types"],
+  
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
     /* Completeness */

@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Today } from '../screens/Today';
+import { Today } from '../screens/Today/Today';
 
 const TodayStack = createStackNavigator();
 
