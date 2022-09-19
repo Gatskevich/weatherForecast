@@ -11,11 +11,18 @@ const addCoordinates = (coordinates: ICityCoordinates) => {
 	};
 };
 
+const addLocalCurentWeather = (localCurentWeather: ICurrentWeather) => {
+	return {
+		type: ActionType.ADD_LOCAL_CURRENT_WEATHER,
+		payload: localCurentWeather,
+	};
+};
+
 const addCurentWeather = (curentWeather: ICurrentWeather) => {
 	return {
-		type: ActionType.ADD_CURRENT_WEATHER,
+		type: ActionType.ADD_CITY_WEATHER,
 		payload: curentWeather,
 	};
 };
 
-export { addCoordinates, addCurentWeather };
+export { addCoordinates, addLocalCurentWeather, addCurentWeather };

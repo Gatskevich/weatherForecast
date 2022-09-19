@@ -68,9 +68,16 @@ export interface ICityCoordinates {
     longitude: number;
 }
 
+export interface ICity {
+	cityName: string;
+	coordinates: ICityCoordinates;
+}
+
 export interface IInitialState {
     cityCoordinates: ICityCoordinates;
-	currentWeather: ICurrentWeather;
+	localCurrentWeather: ICurrentWeather;
+	citiesWeather: Array<ICurrentWeather>;
+	cities: Array<ICityCoordinates>;
 }
 
 

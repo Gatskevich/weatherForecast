@@ -1,6 +1,10 @@
 import axios, { AxiosResponse } from 'axios';
 import { API_KEY } from '@env';
-import { addCoordinates, addCurentWeather } from '../redux/actions';
+import {
+	addCoordinates,
+	addCurentWeather,
+	addLocalCurentWeather,
+} from '../redux/actions';
 import { ICityCoordinates, ICoordinatesData } from '../types/GeneralInterface';
 import { AppAction } from '../types/GeneralTypes';
 
@@ -30,7 +34,8 @@ export function getCoordinatesByLocation(name: string): AppAction {
 }
 
 export function getCurrentWeatherData(
-	coordinates: ICityCoordinates
+	coordinates: ICityCoordinates,
+	localType: boolean
 ): AppAction {
 	const url = `${baseUrl}/data/2.5/weather?lat=${coordinates.latitude}&lon=${coordinates.longitude}&appid=${API_KEY}`;
 
@@ -40,7 +45,11 @@ export function getCurrentWeatherData(
 			url,
 		})
 			.then((response: AxiosResponse) => {
-				dispatch(addCurentWeather(response.data));
+				if (localType) {
+					dispatch(addLocalCurentWeather(response.data));
+				} else {
+					dispatch(addCurentWeather(response.data));
+				}
 			})
 			.catch((response) => {
 				console.error(response);
