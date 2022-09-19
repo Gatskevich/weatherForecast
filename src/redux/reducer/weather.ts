@@ -6,7 +6,22 @@ const initialState: IInitialState = {
 		latitude: 0,
 		longitude: 0,
 	},
-	currentWeather: {
+	citiesWeather: [],
+	cities: [
+		{
+			latitude: 51.1079,
+			longitude: 17.0385,
+		},
+		{
+			latitude: 46.948,
+			longitude: 7.4474,
+		},
+		{
+			latitude: 59.3293,
+			longitude: 18.0686,
+		},
+	],
+	localCurrentWeather: {
 		coord: {
 			lon: 0,
 			lat: 0,
@@ -67,10 +82,20 @@ const WeatherReducer = (
 				...state,
 				cityCoordinates: action.payload,
 			};
-		case ActionType.ADD_CURRENT_WEATHER:
+		case ActionType.ADD_CITY_WEATHER:
 			return {
 				...state,
-				currentWeather: action.payload,
+				citiesWeather: [...state.citiesWeather, action.payload],
+			};
+		case ActionType.ADD_CITIES_WEATHER:
+			return {
+				...state,
+				citiesWeather: action.payload,
+			};
+		case ActionType.ADD_LOCAL_CURRENT_WEATHER:
+			return {
+				...state,
+				citiesWeather: [action.payload, ...state.citiesWeather],
 			};
 		default:
 			return state;

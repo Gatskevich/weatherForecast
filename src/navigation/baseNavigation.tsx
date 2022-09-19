@@ -1,13 +1,14 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Today } from '../screens/Today/Today';
+import { Main } from '../screens/Main/Main';
+import { AddButton } from '../components/AddButton/AddButton';
+import { HeaderTitle } from '../components/HeaderTitle/HeaderTitle';
 
 const TodayStack = createStackNavigator();
 
 export const StackScreen = () => (
 	<TodayStack.Navigator
 		screenOptions={{
-			headerShown: false,
 			cardStyle: { backgroundColor: 'transparent' },
 			cardStyleInterpolator: ({ current: { progress } }) => ({
 				cardStyle: {
@@ -25,6 +26,16 @@ export const StackScreen = () => (
 				},
 			}),
 		}}>
-		<TodayStack.Screen name="Today" component={Today} />
+		<TodayStack.Screen
+			name="Weather forecast"
+			component={Main}
+			options={{
+				headerTitle: () => <HeaderTitle text={'Weather forecast'} />,
+				headerRight: () => <AddButton size={40} />,
+				headerStyle: {
+					backgroundColor: '#00e4d0',
+				},
+			}}
+		/>
 	</TodayStack.Navigator>
 );
