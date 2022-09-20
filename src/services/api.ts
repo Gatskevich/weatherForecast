@@ -1,36 +1,19 @@
 import axios, { AxiosResponse } from 'axios';
 import { API_KEY } from '@env';
-import {
-	addCoordinates,
-	addCurentWeather,
-	addLocalCurentWeather,
-} from '../redux/actions';
-import { ICityCoordinates, ICoordinatesData } from '../types/GeneralInterface';
+import { addCurentWeather, addLocalCurentWeather } from '../redux/actions';
+import { ICityCoordinates } from '../types/GeneralInterface';
 import { AppAction } from '../types/GeneralTypes';
 
 const reqType = 'GET';
 const baseUrl = 'https://api.openweathermap.org';
 
-export function getCoordinatesByLocation(name: string): AppAction {
+export function getCoordinatesByLocation(name: string) {
 	const url = `${baseUrl}/geo/1.0/direct?q=${name}&limit=1&appid=${API_KEY}`;
 
-	return (dispatch) => {
-		axios({
-			method: reqType,
-			url,
-		})
-			.then((response: AxiosResponse) => {
-				const { lat, lon } = response.data[0] as ICoordinatesData;
-				const coordinates: ICityCoordinates = {
-					latitude: lat,
-					longitude: lon,
-				};
-				dispatch(addCoordinates(coordinates));
-			})
-			.catch((response) => {
-				console.error(response);
-			});
-	};
+	return axios({
+		method: reqType,
+		url,
+	});
 }
 
 export function getCurrentWeatherData(

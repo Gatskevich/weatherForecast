@@ -1,6 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Main } from '../screens/Main/Main';
+import { Search } from '../screens/Search/Search';
 import { AddButton } from '../components/AddButton/AddButton';
 import { HeaderTitle } from '../components/HeaderTitle/HeaderTitle';
 
@@ -27,7 +28,7 @@ export const StackScreen = () => (
 			}),
 		}}>
 		<TodayStack.Screen
-			name="Weather forecast"
+			name="Main"
 			component={Main}
 			options={{
 				headerTitle: () => <HeaderTitle text={'Weather forecast'} />,
@@ -36,6 +37,11 @@ export const StackScreen = () => (
 					backgroundColor: '#00e4d0',
 				},
 			}}
+		/>
+		<TodayStack.Screen
+			name="Search"
+			component={Search}
+			options={{ headerShown: false }}
 		/>
 	</TodayStack.Navigator>
 );

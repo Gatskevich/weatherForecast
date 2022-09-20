@@ -2,6 +2,10 @@
 {
   "extends": "@tsconfig/react-native/tsconfig.json",     /* Recommended React Native TSConfig base */
   "compilerOptions": {
+    "lib": [
+      "es2022",
+      "dom"
+    ],
     "allowSyntheticDefaultImports": true,
     "jsx": "react",
     "typeRoots": ["./src/types"],
