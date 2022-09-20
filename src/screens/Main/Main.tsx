@@ -24,7 +24,6 @@ export const Main = () => {
 	);
 
 	const getCurrentPositionInformation = async () => {
-		//await AsyncStorage.setItem('cities', JSON.stringify(cities));
 		if (citiesWeather.length < lengthCity + 1) {
 			Geolocation.getCurrentPosition(
 				(position: GeolocationResponse) => {
@@ -43,6 +42,7 @@ export const Main = () => {
 
 	const getCitiesCoordinates = async () => {
 		const citiesCoordinates = await AsyncStorage.getItem('cities');
+		console.log(citiesCoordinates);
 		if (citiesCoordinates) {
 			const citiesCoordinatesParse = JSON.parse(citiesCoordinates);
 			setLengthCity(citiesCoordinatesParse.length);
@@ -59,14 +59,7 @@ export const Main = () => {
 	useEffect(() => {
 		getCitiesCoordinates();
 		getCurrentPositionInformation();
-		//dispatch(getCoordinatesByLocation('London'));
 	}, []);
-
-	// useEffect(() => {
-	// 	if (coordinates.latitude !== 0 && coordinates.longitude !== 0) {
-	// 		dispatch(getCurrentWeatherData(coordinates));
-	// 	}
-	// }, [coordinates]);
 
 	const renderCitiesWeather = () => {
 		return citiesWeather.map((cityWeather: ICurrentWeather) => {

@@ -80,4 +80,12 @@ export interface IInitialState {
 	cities: Array<ICityCoordinates>;
 }
 
+export interface ISitiesSearchData {
+	id: string;
+	name: string;
+}
+
+export interface IRenderItem{
+	item: ISitiesSearchData;
+}
 
