@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import {
+	ImageBackground,
+	ImageSourcePropType,
+	Text,
+	View,
+	Image,
+} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentWeatherData } from '../../services/api';
 import { AppDispatch, RootState } from '../../types/GeneralTypes';
@@ -15,6 +21,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { assetList } from '../../assets';
 import FastImage from 'react-native-fast-image';
+import { daysWeek, month } from '../../data/data';
 
 export const Main = () => {
 	const [lengthCity, setLengthCity] = useState(0);
@@ -42,7 +49,6 @@ export const Main = () => {
 
 	const getCitiesCoordinates = async () => {
 		const citiesCoordinates = await AsyncStorage.getItem('cities');
-		console.log(citiesCoordinates);
 		if (citiesCoordinates) {
 			const citiesCoordinatesParse = JSON.parse(citiesCoordinates);
 			setLengthCity(citiesCoordinatesParse.length);
@@ -63,21 +69,70 @@ export const Main = () => {
 
 	const renderCitiesWeather = () => {
 		return citiesWeather.map((cityWeather: ICurrentWeather) => {
+			const date = new Date(new Date().getTime() + 1000 * cityWeather.timezone);
+			const fullDate = date.toISOString();
+			const nameWeek = daysWeek[date.getDay()];
+			const nameMonth = month[date.getMonth()];
+			const dateDayNumber = fullDate.slice(8, 10);
+			const dateTime = fullDate.slice(11, 16);
+			const hours = Number(dateTime.split(':')[0]);
+			let imageTimesDay: ImageSourcePropType = assetList.images.day;
+
+			if (hours >= 4 && hours < 12) {
+				imageTimesDay = assetList.images.morning;
+			} else if (hours >= 12 && hours < 20) {
+				imageTimesDay = assetList.images.day;
+			} else {
+				imageTimesDay = assetList.images.night;
+			}
+
 			return (
-				<View key={cityWeather.id} style={styles.slide}>
-					<Text>Name: {cityWeather.name}</Text>
-					<Text>
-						Feels like: {(cityWeather.main.feels_like - 273.15).toFixed(1)}
-					</Text>
-					<Text>Temp: {(cityWeather.main.temp - 273.15).toFixed(1)}</Text>
-				</View>
+				<ImageBackground
+					key={cityWeather.id}
+					source={imageTimesDay}
+					style={styles.slide}
+					resizeMode="cover">
+					<View style={styles.locationInfo}>
+						<Text style={styles.textCity}>{cityWeather.name}</Text>
+						<Text style={styles.textDate}>
+							{nameWeek}, {nameMonth} {dateDayNumber} {dateTime}
+						</Text>
+					</View>
+					<View style={styles.mainWeather}>
+						<View style={styles.mainTemp}>
+							<Image
+								style={styles.iconWeather}
+								source={assetList.icons.cloudy}
+							/>
+							<Text style={styles.textTemp}>
+								{(cityWeather.main.temp - 273.15).toFixed(0)}
+							</Text>
+							<Image
+								style={styles.iconCelsius}
+								source={assetList.icons.celsius}
+							/>
+						</View>
+						<View style={styles.additionalTemp}>
+							<Text style={styles.additionalTempText}>
+								{(cityWeather.main.temp_max - 273.15).toFixed(0)}&#8451; /{' '}
+								{(cityWeather.main.temp_min - 273.15).toFixed(0)}&#8451; Feels
+								like {(cityWeather.main.feels_like - 273.15).toFixed(0)}&#8451;
+							</Text>
+						</View>
+						<View style={styles.description}>
+							<Text style={styles.descriptionText}>
+								{cityWeather.weather[0].description}
+							</Text>
+						</View>
+					</View>
+				</ImageBackground>
 			);
 		});
 	};
 
 	if (citiesWeather.length < lengthCity + 1) {
 		return (
-			<View style={styles.slide}>
+			<View style={styles.noConten}>
 				<FastImage
 					style={styles.iamge}
 					source={assetList.gifs.weatherVane}
@@ -92,6 +147,7 @@ export const Main = () => {
 			style={styles.wrapper}
 			showsPagination={false}
 			loop={false}
+			buttonWrapperStyle={{}}
 			showsButtons={true}>
 			{renderCitiesWeather()}
 		</Swiper>

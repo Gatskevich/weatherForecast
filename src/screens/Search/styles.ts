@@ -1,11 +1,14 @@
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
-	wrapper: {},
+	headerWrapper: {
+		width: '100%',
+		flexDirection: 'row',
+		right: 0,
+	},
 	container: {
 		width: '100%',
 		height: '100%',
-		backgroundColor: 'white',
 	},
 	item: {
 		paddingLeft: 15,
@@ -16,5 +19,20 @@ export const styles = StyleSheet.create({
 	text: {
 		fontSize: 16,
 		color: 'black',
+	},
+	image: {
+		flex: 1,
+		width: '100%',
+		height: '100%',
+	},
+	input: {
+		width: '100%',
+		backgroundColor: 'rgba(255, 51, 26, 0.7)',
+		borderTopLeftRadius: 0,
+		borderTopRightRadius: 0,
+		borderBottmWidth: 0,
+	},
+	header: {
+		backgroundColor: 'rgba(255, 51, 26, 0.7)',
 	},
 });

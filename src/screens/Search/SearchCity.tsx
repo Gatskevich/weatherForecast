@@ -2,9 +2,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { AxiosResponse } from 'axios';
 import React, { useCallback, useEffect } from 'react';
-import { FlatList, SafeAreaView, View } from 'react-native';
+import { FlatList, ImageBackground, SafeAreaView, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
+import { assetList } from '../../assets';
+import { BackButton } from '../../components/BackButton/AddButton';
 import { Item } from '../../components/Item/Item';
 import {
 	getCoordinatesByLocation,
@@ -19,15 +21,15 @@ import {
 import { AppDispatch } from '../../types/GeneralTypes';
 import { styles } from './styles';
 
-export const Search = () => {
+export const SearchCity = () => {
 	const [text, setText] = React.useState<string>('');
 	const [data, setData] = React.useState<Array<ISitiesSearchData>>([]);
 	const navigation = useNavigation();
 	const dispatch: AppDispatch = useDispatch();
 
-	const handledOnPress = useCallback((text: string) => {
-		if (text !== '') {
-			getCoordinatesByLocation(text)
+	const handledOnPress = useCallback((textValue: string) => {
+		if (textValue !== '') {
+			getCoordinatesByLocation(textValue)
 				.then(async (response: AxiosResponse) => {
 					const { lat, lon } = response.data[0] as ICoordinatesData;
 					const coordinates: ICityCoordinates = {
@@ -60,23 +62,38 @@ export const Search = () => {
 
 	return (
 		<View style={styles.container}>
-			<TextInput
-				label="City"
-				mode="flat"
-				value={text}
-				onChangeText={(text) => setText(text)}
-			/>
-			<SafeAreaView style={styles.container}>
-				{data.length === 0 ? (
-					<Item text={text} onPress={handledOnPress} />
-				) : (
-					<FlatList
-						data={data}
-						renderItem={renderItem}
-						keyExtractor={(item) => item.id}
-					/>
-				)}
-			</SafeAreaView>
+			<View style={styles.header}>
+				<View style={styles.header}>
+					<BackButton size={15} />
+				</View>
+				<TextInput
+					label="City"
+					mode="flat"
+					value={text}
+					onChangeText={(value) => setText(value)}
+					style={styles.input}
+					activeOutlineColor="red"
+					activeUnderlineColor="red"
+					underlineColor="black"
+					selectionColor="red"
+				/>
+			</View>
+			<ImageBackground
+				source={assetList.images.city}
+				style={styles.image}
+				resizeMode="cover">
+				<View>
+					{data.length === 0 ? (
+						<Item text={text} onPress={handledOnPress} />
+					) : (
+						<FlatList
+							data={data}
+							renderItem={renderItem}
+							keyExtractor={(item) => item.id}
+						/>
+					)}
+				</View>
+			</ImageBackground>
 		</View>
 	);
 };
