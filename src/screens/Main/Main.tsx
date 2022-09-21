@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-	ImageBackground,
-	ImageSourcePropType,
-	Text,
-	View,
-	Image,
-} from 'react-native';
+import { ImageBackground, Text, View, Image } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentWeatherData } from '../../services/api';
 import { AppDispatch, RootState } from '../../types/GeneralTypes';
@@ -14,14 +8,12 @@ import Geolocation, {
 	GeolocationResponse,
 } from '@react-native-community/geolocation';
 import Swiper from 'react-native-swiper';
-import {
-	ICityCoordinates,
-	ICurrentWeather,
-} from '../../types/GeneralInterface';
+import { ICityCoordinates, IWeather } from '../../types/GeneralInterface';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { assetList } from '../../assets';
 import FastImage from 'react-native-fast-image';
 import { daysWeek, month } from '../../data/data';
+import { difineTimeDayPic } from '../../utils/commonFuctions';
 
 export const Main = () => {
 	const [lengthCity, setLengthCity] = useState(0);
@@ -68,7 +60,7 @@ export const Main = () => {
 	}, []);
 
 	const renderCitiesWeather = () => {
-		return citiesWeather.map((cityWeather: ICurrentWeather) => {
+		return citiesWeather.map((cityWeather: IWeather) => {
 			const date = new Date(new Date().getTime() + 1000 * cityWeather.timezone);
 			const fullDate = date.toISOString();
 			const nameWeek = daysWeek[date.getDay()];
@@ -76,20 +68,12 @@ export const Main = () => {
 			const dateDayNumber = fullDate.slice(8, 10);
 			const dateTime = fullDate.slice(11, 16);
 			const hours = Number(dateTime.split(':')[0]);
-			let imageTimesDay: ImageSourcePropType = assetList.images.day;
-
-			if (hours >= 4 && hours < 12) {
-				imageTimesDay = assetList.images.morning;
-			} else if (hours >= 12 && hours < 20) {
-				imageTimesDay = assetList.images.day;
-			} else {
-				imageTimesDay = assetList.images.night;
-			}
+			const imageTimeDay = difineTimeDayPic(hours);
 
 			return (
 				<ImageBackground
-					key={cityWeather.id}
-					source={imageTimesDay}
+					key={cityWeather.name}
+					source={imageTimeDay}
 					style={styles.slide}
 					resizeMode="cover">
 					<View style={styles.locationInfo}>
@@ -105,7 +89,7 @@ export const Main = () => {
 								source={assetList.icons.cloudy}
 							/>
 							<Text style={styles.textTemp}>
-								{(cityWeather.main.temp - 273.15).toFixed(0)}
+								{cityWeather.weather.temperature}
 							</Text>
 							<Image
 								style={styles.iconCelsius}
@@ -114,14 +98,14 @@ export const Main = () => {
 						</View>
 						<View style={styles.additionalTemp}>
 							<Text style={styles.additionalTempText}>
-								{(cityWeather.main.temp_max - 273.15).toFixed(0)}&#8451; /{' '}
-								{(cityWeather.main.temp_min - 273.15).toFixed(0)}&#8451; Feels
-								like {(cityWeather.main.feels_like - 273.15).toFixed(0)}&#8451;
+								{cityWeather.weather.temperatureMax}&#8451; /{' '}
+								{cityWeather.weather.temperatureMin}&#8451; Feels like{' '}
+								{cityWeather.weather.feelsLike}&#8451;
 							</Text>
 						</View>
 						<View style={styles.description}>
 							<Text style={styles.descriptionText}>
-								{cityWeather.weather[0].description}
+								{cityWeather.weather.description}
 							</Text>
 						</View>
 					</View>

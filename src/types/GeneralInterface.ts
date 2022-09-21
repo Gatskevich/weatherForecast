@@ -74,10 +74,7 @@ export interface ICity {
 }
 
 export interface IInitialState {
-    cityCoordinates: ICityCoordinates;
-	localCurrentWeather: ICurrentWeather;
-	citiesWeather: Array<ICurrentWeather>;
-	cities: Array<ICityCoordinates>;
+	citiesWeather: Array<IWeather>;
 }
 
 export interface ISitiesSearchData {
@@ -89,3 +86,17 @@ export interface IRenderItem{
 	item: ISitiesSearchData;
 }
 
+export interface IWeather {
+	date: number;
+	timezone: number;
+	name: string;
+	weather: {
+		temperature: string;
+		feelsLike: string;
+		temperatureMin: string;
+		temperatureMax: string;
+		main: string;
+		description: string;
+		clouds: number;
+	};
+}

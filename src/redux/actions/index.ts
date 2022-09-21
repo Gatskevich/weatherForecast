@@ -1,7 +1,3 @@
-import {
-	addCoordinates,
-	addLocalCurentWeather,
-	addCurentWeather,
-} from './weather';
+import { addLocalCurentWeather, addCurentWeather } from './weather';
 
-export { addCoordinates, addLocalCurentWeather, addCurentWeather };
+export { addLocalCurentWeather, addCurentWeather };
