@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { ImageBackground, Text, View, Image } from 'react-native';
+import {
+	ImageBackground,
+	Text,
+	View,
+	Image,
+	RefreshControl,
+	ScrollView,
+} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentWeatherData } from '../../services/api';
 import { AppDispatch, RootState } from '../../types/GeneralTypes';
@@ -14,6 +21,7 @@ import { assetList } from '../../assets';
 import FastImage from 'react-native-fast-image';
 import { daysWeek, month } from '../../data/data';
 import { difineTimeDayPic } from '../../utils/commonFuctions';
+import { addAllCurentWeather } from '../../redux/actions';
 
 export const Main = () => {
 	const [lengthCity, setLengthCity] = useState(0);
@@ -22,7 +30,7 @@ export const Main = () => {
 		(state: RootState) => state.WeatherReducer.citiesWeather
 	);
 
-	const getCurrentPositionInformation = async () => {
+	const getCurrentPositionInformation = async (): Promise<void> => {
 		if (citiesWeather.length < lengthCity + 1) {
 			Geolocation.getCurrentPosition(
 				(position: GeolocationResponse) => {
@@ -39,7 +47,7 @@ export const Main = () => {
 		}
 	};
 
-	const getCitiesCoordinates = async () => {
+	const getCitiesCoordinates = async (): Promise<void> => {
 		const citiesCoordinates = await AsyncStorage.getItem('cities');
 		if (citiesCoordinates) {
 			const citiesCoordinatesParse = JSON.parse(citiesCoordinates);
@@ -54,13 +62,19 @@ export const Main = () => {
 		}
 	};
 
+	const onRefresh = (): void => {
+		dispatch(addAllCurentWeather([]));
+	};
+
 	useEffect(() => {
-		getCitiesCoordinates();
-		getCurrentPositionInformation();
-	}, []);
+		if (citiesWeather.length === 0) {
+			getCitiesCoordinates();
+			getCurrentPositionInformation();
+		}
+	}, [citiesWeather]);
 
 	const renderCitiesWeather = () => {
-		return citiesWeather.map((cityWeather: IWeather) => {
+		return citiesWeather.map((cityWeather: IWeather): JSX.Element => {
 			const date = new Date(new Date().getTime() + 1000 * cityWeather.timezone);
 			const fullDate = date.toISOString();
 			const nameWeek = daysWeek[date.getDay()];
@@ -127,13 +141,20 @@ export const Main = () => {
 	}
 
 	return (
-		<Swiper
-			style={styles.wrapper}
-			showsPagination={false}
-			loop={false}
-			buttonWrapperStyle={{}}
-			showsButtons={true}>
-			{renderCitiesWeather()}
-		</Swiper>
+		<View>
+			<ScrollView
+				refreshControl={
+					<RefreshControl refreshing={false} onRefresh={onRefresh} />
+				}>
+				<Swiper
+					style={styles.wrapper}
+					showsPagination={false}
+					loop={false}
+					buttonWrapperStyle={{}}
+					showsButtons={true}>
+					{renderCitiesWeather()}
+				</Swiper>
+			</ScrollView>
+		</View>
 	);
 };

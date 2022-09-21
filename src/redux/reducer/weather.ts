@@ -15,6 +15,11 @@ const WeatherReducer = (
 				...state,
 				citiesWeather: [...state.citiesWeather, action.payload],
 			};
+		case ActionType.ADD_CITIES_WEATHER:
+			return {
+				...state,
+				citiesWeather: action.payload,
+			};
 		case ActionType.ADD_LOCAL_CURRENT_WEATHER:
 			return {
 				...state,

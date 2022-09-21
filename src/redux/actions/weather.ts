@@ -1,6 +1,13 @@
 import { ActionType } from '../../types/ActionType';
 import { IWeather } from '../../types/GeneralInterface';
 
+const addAllCurentWeather = (coordinates: Array<IWeather>) => {
+	return {
+		type: ActionType.ADD_CITIES_WEATHER,
+		payload: coordinates,
+	};
+};
+
 const addLocalCurentWeather = (localCurentWeather: IWeather) => {
 	return {
 		type: ActionType.ADD_LOCAL_CURRENT_WEATHER,
@@ -15,4 +22,4 @@ const addCurentWeather = (curentWeather: IWeather) => {
 	};
 };
 
-export { addLocalCurentWeather, addCurentWeather };
+export { addAllCurentWeather, addLocalCurentWeather, addCurentWeather };
