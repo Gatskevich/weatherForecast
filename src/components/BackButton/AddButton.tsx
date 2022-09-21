@@ -4,15 +4,15 @@ import { Image, TouchableOpacity, View } from 'react-native';
 import { assetList } from '../../assets';
 import { styles } from './styles';
 
-interface AddButtonProps {
+interface BackButtonProps {
 	size: number;
 }
 
-export const AddButton = ({ size }: AddButtonProps) => {
+export const BackButton = ({ size }: BackButtonProps) => {
 	const navigation = useNavigation();
 
 	const handledOnPress = () => {
-		navigation.navigate('SearchCity' as never);
+		navigation.goBack();
 	};
 
 	return (
@@ -20,7 +20,7 @@ export const AddButton = ({ size }: AddButtonProps) => {
 			<TouchableOpacity style={styles.wrapperTouch} onPress={handledOnPress}>
 				<Image
 					style={{ width: size, height: size }}
-					source={assetList.icons.plus}
+					source={assetList.icons.back}
 				/>
 			</TouchableOpacity>
 		</View>

@@ -1,9 +1,12 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Main } from '../screens/Main/Main';
-import { Search } from '../screens/Search/Search';
+import { SearchCity } from '../screens/Search/SearchCity';
 import { AddButton } from '../components/AddButton/AddButton';
 import { HeaderTitle } from '../components/HeaderTitle/HeaderTitle';
+import { ImageBackground } from 'react-native';
+import { assetList } from '../assets';
+import { styles } from './style';
 
 const TodayStack = createStackNavigator();
 
@@ -33,14 +36,18 @@ export const StackScreen = () => (
 			options={{
 				headerTitle: () => <HeaderTitle text={'Weather forecast'} />,
 				headerRight: () => <AddButton size={40} />,
-				headerStyle: {
-					backgroundColor: '#00e4d0',
-				},
+				headerBackground: () => (
+					<ImageBackground
+						source={assetList.images.allSeasons}
+						style={styles.image}
+						resizeMode="cover"
+					/>
+				),
 			}}
 		/>
 		<TodayStack.Screen
-			name="Search"
-			component={Search}
+			name="SearchCity"
+			component={SearchCity}
 			options={{ headerShown: false }}
 		/>
 	</TodayStack.Navigator>
