@@ -27,7 +27,7 @@ export const SearchCity = () => {
 	const navigation = useNavigation();
 	const dispatch: AppDispatch = useDispatch();
 
-	const handledOnPress = useCallback((textValue: string) => {
+	const handledOnPress = useCallback((textValue: string): void => {
 		if (textValue !== '') {
 			getCoordinatesByLocation(textValue)
 				.then(async (response: AxiosResponse) => {
@@ -52,11 +52,10 @@ export const SearchCity = () => {
 				.catch((response) => {
 					console.error(response);
 				});
-		} else {
 		}
 	}, []);
 
-	const renderItem = ({ item }: IRenderItem) => {
+	const renderItem = ({ item }: IRenderItem): JSX.Element => {
 		return <Item text={item.name} onPress={handledOnPress} />;
 	};
 

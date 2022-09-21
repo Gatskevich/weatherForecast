@@ -1,7 +1,7 @@
 import {
-	addCoordinates,
+	addAllCurentWeather,
 	addLocalCurentWeather,
 	addCurentWeather,
 } from './weather';
 
-export { addCoordinates, addLocalCurentWeather, addCurentWeather };
+export { addAllCurentWeather, addLocalCurentWeather, addCurentWeather };

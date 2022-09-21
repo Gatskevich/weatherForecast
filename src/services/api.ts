@@ -3,6 +3,7 @@ import { API_KEY } from '@env';
 import { addCurentWeather, addLocalCurentWeather } from '../redux/actions';
 import { ICityCoordinates } from '../types/GeneralInterface';
 import { AppAction } from '../types/GeneralTypes';
+import { parseDataWeather } from '../utils/commonFuctions';
 
 const reqType = 'GET';
 const baseUrl = 'https://api.openweathermap.org';
@@ -28,10 +29,12 @@ export function getCurrentWeatherData(
 			url,
 		})
 			.then((response: AxiosResponse) => {
+				const weather = parseDataWeather(response.data);
+
 				if (localType) {
-					dispatch(addLocalCurentWeather(response.data));
+					dispatch(addLocalCurentWeather(weather));
 				} else {
-					dispatch(addCurentWeather(response.data));
+					dispatch(addCurentWeather(weather));
 				}
 			})
 			.catch((response) => {
