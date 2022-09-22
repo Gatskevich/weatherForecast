@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import {
 	ImageBackground,
-	Text,
 	View,
-	Image,
 	RefreshControl,
 	ScrollView,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCurrentWeatherData } from '../../services/api';
+import {
+	getCurrentWeatherData,
+	getThreeHoursWeatherData,
+} from '../../services/api';
 import { AppDispatch, RootState } from '../../types/GeneralTypes';
 import { styles } from './styles';
 import Geolocation, {
@@ -21,17 +22,25 @@ import { assetList } from '../../assets';
 import FastImage from 'react-native-fast-image';
 import { daysWeek, month } from '../../data/data';
 import { difineTimeDayPic } from '../../utils/commonFuctions';
-import { addAllCurentWeather } from '../../redux/actions';
+import {
+	addAllCurentWeather,
+	addAllThreeHoursWeather,
+} from '../../redux/actions';
+import { TimeSwiper } from '../../components/TimeSwiper/TimeSwiper';
+import { WeatherInformation } from '../../components/WeatherInformation/WeatherInformation';
 
 export const Main = () => {
-	const [lengthCity, setLengthCity] = useState(0);
+	const [citiesCoordinates, setCitiesCoordinates] = useState([]);
 	const dispatch: AppDispatch = useDispatch();
 	const citiesWeather = useSelector(
 		(state: RootState) => state.WeatherReducer.citiesWeather
 	);
+	const citiesThreeHoursWeather = useSelector(
+		(state: RootState) => state.WeatherReducer.citiesThreeHoursWeather
+	);
 
 	const getCurrentPositionInformation = async (): Promise<void> => {
-		if (citiesWeather.length < lengthCity + 1) {
+		if (citiesWeather.length < citiesCoordinates.length + 1) {
 			Geolocation.getCurrentPosition(
 				(position: GeolocationResponse) => {
 					const { latitude, longitude } = position.coords;
@@ -39,6 +48,7 @@ export const Main = () => {
 						latitude,
 						longitude,
 					};
+					dispatch(getThreeHoursWeatherData(currentCoordinates, true));
 					dispatch(getCurrentWeatherData(currentCoordinates, true));
 				},
 				(error) => console.error(error),
@@ -47,34 +57,38 @@ export const Main = () => {
 		}
 	};
 
-	const getCitiesCoordinates = async (): Promise<void> => {
-		const citiesCoordinates = await AsyncStorage.getItem('cities');
-		if (citiesCoordinates) {
-			const citiesCoordinatesParse = JSON.parse(citiesCoordinates);
-			setLengthCity(citiesCoordinatesParse.length);
-			if (citiesWeather.length < citiesCoordinatesParse.length) {
-				await citiesCoordinatesParse.map(
-					(cityCoordinates: ICityCoordinates) => {
-						dispatch(getCurrentWeatherData(cityCoordinates, false));
-					}
-				);
-			}
+	const getCitiesCoordinates = (): void => {
+		if (citiesWeather.length < citiesCoordinates.length) {
+			citiesCoordinates.map((cityCoordinates: ICityCoordinates) => {
+				dispatch(getThreeHoursWeatherData(cityCoordinates, false));
+				dispatch(getCurrentWeatherData(cityCoordinates, false));
+			});
 		}
 	};
 
 	const onRefresh = (): void => {
 		dispatch(addAllCurentWeather([]));
+		dispatch(addAllThreeHoursWeather([]));
+	};
+
+	const getCoordinates = async (): Promise<void> => {
+		const citiesCoordinatesAsy = await AsyncStorage.getItem('cities');
+		if (citiesCoordinatesAsy) {
+			const citiesCoordinatesParse = JSON.parse(citiesCoordinatesAsy);
+			setCitiesCoordinates(citiesCoordinatesParse);
+		}
 	};
 
 	useEffect(() => {
-		if (citiesWeather.length === 0) {
+		if (citiesWeather.length === 0 && citiesThreeHoursWeather.length === 0) {
+			getCoordinates();
 			getCitiesCoordinates();
 			getCurrentPositionInformation();
 		}
-	}, [citiesWeather]);
+	}, [citiesWeather, citiesThreeHoursWeather]);
 
 	const renderCitiesWeather = () => {
-		return citiesWeather.map((cityWeather: IWeather): JSX.Element => {
+		return citiesWeather.map((cityWeather: IWeather, index): JSX.Element => {
 			const date = new Date(new Date().getTime() + 1000 * cityWeather.timezone);
 			const fullDate = date.toISOString();
 			const nameWeek = daysWeek[date.getDay()];
@@ -83,52 +97,26 @@ export const Main = () => {
 			const dateTime = fullDate.slice(11, 16);
 			const hours = Number(dateTime.split(':')[0]);
 			const imageTimeDay = difineTimeDayPic(hours);
+			const fulDate = `${nameWeek}, ${nameMonth} ${dateDayNumber} ${dateTime}`;
 
 			return (
 				<ImageBackground
 					key={cityWeather.name}
 					source={imageTimeDay}
-					style={styles.slide}
-					resizeMode="cover">
-					<View style={styles.locationInfo}>
-						<Text style={styles.textCity}>{cityWeather.name}</Text>
-						<Text style={styles.textDate}>
-							{nameWeek}, {nameMonth} {dateDayNumber} {dateTime}
-						</Text>
-					</View>
-					<View style={styles.mainWeather}>
-						<View style={styles.mainTemp}>
-							<Image
-								style={styles.iconWeather}
-								source={assetList.icons.cloudy}
-							/>
-							<Text style={styles.textTemp}>
-								{cityWeather.weather.temperature}
-							</Text>
-							<Image
-								style={styles.iconCelsius}
-								source={assetList.icons.celsius}
-							/>
-						</View>
-						<View style={styles.additionalTemp}>
-							<Text style={styles.additionalTempText}>
-								{cityWeather.weather.temperatureMax}&#8451; /{' '}
-								{cityWeather.weather.temperatureMin}&#8451; Feels like{' '}
-								{cityWeather.weather.feelsLike}&#8451;
-							</Text>
-						</View>
-						<View style={styles.description}>
-							<Text style={styles.descriptionText}>
-								{cityWeather.weather.description}
-							</Text>
-						</View>
-					</View>
+					resizeMode="cover"
+					style={styles.slide}>
+					<WeatherInformation fulDate={fulDate} cityWeather={cityWeather} />
+					<TimeSwiper cityThreeHours={citiesThreeHoursWeather[index]} />
 				</ImageBackground>
 			);
 		});
 	};
 
-	if (citiesWeather.length < lengthCity + 1) {
+	if (
+		citiesWeather.length < citiesCoordinates.length + 1 ||
+		citiesThreeHoursWeather.length < citiesCoordinates.length + 1 ||
+		citiesWeather.length !== citiesThreeHoursWeather.length
+	) {
 		return (
 			<View style={styles.noConten}>
 				<FastImage
@@ -147,7 +135,6 @@ export const Main = () => {
 					<RefreshControl refreshing={false} onRefresh={onRefresh} />
 				}>
 				<Swiper
-					style={styles.wrapper}
 					showsPagination={false}
 					loop={false}
 					buttonWrapperStyle={{}}

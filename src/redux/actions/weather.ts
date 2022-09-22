@@ -1,10 +1,26 @@
 import { ActionType } from '../../types/ActionType';
-import { IWeather } from '../../types/GeneralInterface';
+import { IThreeHoursWeather, IWeather } from '../../types/GeneralInterface';
 
-const addAllCurentWeather = (coordinates: Array<IWeather>) => {
+const addAllCurentWeather = (curentWeather: Array<IWeather>) => {
 	return {
 		type: ActionType.ADD_CITIES_WEATHER,
-		payload: coordinates,
+		payload: curentWeather,
+	};
+};
+
+const addThreeHoursWeather = (threeHoursWeather: Array<IThreeHoursWeather>) => {
+	return {
+		type: ActionType.ADD_THREE_HOURS_WEATHER,
+		payload: threeHoursWeather,
+	};
+};
+
+const addLocalThreeHoursWeather = (
+	threeHoursWeather: Array<IThreeHoursWeather>
+) => {
+	return {
+		type: ActionType.ADD_LOCAL_THREE_HOURS_WEATHER,
+		payload: threeHoursWeather,
 	};
 };
 
@@ -22,4 +38,20 @@ const addCurentWeather = (curentWeather: IWeather) => {
 	};
 };
 
-export { addAllCurentWeather, addLocalCurentWeather, addCurentWeather };
+const addAllThreeHoursWeather = (
+	threeHoursWeather: Array<Array<IThreeHoursWeather>>
+) => {
+	return {
+		type: ActionType.ADD_ALL_THREE_HOURS_WEATHER,
+		payload: threeHoursWeather,
+	};
+};
+
+export {
+	addAllThreeHoursWeather,
+	addLocalThreeHoursWeather,
+	addThreeHoursWeather,
+	addAllCurentWeather,
+	addLocalCurentWeather,
+	addCurentWeather,
+};

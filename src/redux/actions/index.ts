@@ -2,6 +2,16 @@ import {
 	addAllCurentWeather,
 	addLocalCurentWeather,
 	addCurentWeather,
+	addThreeHoursWeather,
+	addLocalThreeHoursWeather,
+	addAllThreeHoursWeather,
 } from './weather';
 
-export { addAllCurentWeather, addLocalCurentWeather, addCurentWeather };
+export {
+	addAllThreeHoursWeather,
+	addLocalThreeHoursWeather,
+	addThreeHoursWeather,
+	addAllCurentWeather,
+	addLocalCurentWeather,
+	addCurentWeather,
+};
