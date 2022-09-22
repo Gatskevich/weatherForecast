@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { AllColors } from '../../styles/ConstColor';
 
 export const styles = StyleSheet.create({
 	headerWrapper: {
@@ -13,12 +14,12 @@ export const styles = StyleSheet.create({
 	item: {
 		paddingLeft: 15,
 		height: 40,
-		backgroundColor: 'rgba(230, 230, 230, 0.2)',
+		backgroundColor: AllColors.BackgroundSelect,
 		justifyContent: 'center',
 	},
 	text: {
 		fontSize: 16,
-		color: 'black',
+		color: AllColors.BlackColor,
 	},
 	image: {
 		flex: 1,
@@ -27,12 +28,12 @@ export const styles = StyleSheet.create({
 	},
 	input: {
 		width: '100%',
-		backgroundColor: 'rgba(255, 51, 26, 0.7)',
+		backgroundColor: AllColors.RedColor,
 		borderTopLeftRadius: 0,
 		borderTopRightRadius: 0,
 		borderBottmWidth: 0,
 	},
 	header: {
-		backgroundColor: 'rgba(255, 51, 26, 0.7)',
+		backgroundColor: AllColors.RedColor,
 	},
 });

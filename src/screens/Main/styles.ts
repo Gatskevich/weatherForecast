@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { AllColors } from '../../styles/ConstColor';
 
 export const styles = StyleSheet.create({
 	container: {
@@ -11,15 +12,15 @@ export const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
-	iamge: {
-		width: 100,
-		height: 100,
-		backgroundColor: '#92BBD9',
+	image: {
+		width: '100%',
+		height: 200,
+		backgroundColor: AllColors.BlueColor,
 	},
 	noConten: {
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
-		backgroundColor: '#92BBD9',
+		backgroundColor: AllColors.BlueColor,
 	},
 });

@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { AllColors } from '../../styles/ConstColor';
 
 export const styles = StyleSheet.create({
 	wrapper: {
@@ -12,31 +13,31 @@ export const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	text: {
-		color: 'white',
+		color: AllColors.WhiteColor,
 		fontFamily: 'monospace',
 		fontSize: 14,
 	},
 	textHeader: {
 		fontSize: 18,
 		alignSelf: 'center',
-		color: 'white',
+		color: AllColors.WhiteColor,
 		fontFamily: 'monospace',
 		marginBottom: 20,
 	},
 	textDate: {
-		color: 'white',
+		color: AllColors.WhiteColor,
 		fontFamily: 'monospace',
 		fontSize: 14,
 	},
 	border: {
 		width: 2,
 		height: 90,
-		backgroundColor: 'white',
+		backgroundColor: AllColors.WhiteColor,
 		marginRight: 10,
 	},
 	wrapperSlide: {
 		flexDirection: 'row',
-		backgroundColor: 'rgba(204, 204, 204, 0.4)',
+		backgroundColor: AllColors.BackgroundSwipe,
 	},
 	iconWeather: {
 		width: 20,

@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { AllColors } from '../../styles/ConstColor';
 
 export const styles = StyleSheet.create({
 	wrapper: {
@@ -37,12 +38,12 @@ export const styles = StyleSheet.create({
 		marginTop: 10,
 	},
 	additionalTempText: {
-		color: 'white',
+		color: AllColors.WhiteColor,
 		fontSize: 14,
 		fontFamily: 'monospace',
 	},
 	descriptionText: {
-		color: 'white',
+		color: AllColors.WhiteColor,
 		fontSize: 14,
 		fontFamily: 'monospace',
 	},
@@ -55,7 +56,7 @@ export const styles = StyleSheet.create({
 		height: 38,
 	},
 	textTemp: {
-		color: 'white',
+		color: AllColors.WhiteColor,
 		fontSize: 50,
 		fontFamily: 'monospace',
 		marginLeft: 10,

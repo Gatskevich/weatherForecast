@@ -1,20 +1,21 @@
 import { StyleSheet } from 'react-native';
+import { AllColors } from '../../styles/ConstColor';
 
 export const styles = StyleSheet.create({
 	wrapper: {},
 	container: {
 		width: '100%',
 		height: '100%',
-		backgroundColor: 'white',
+		backgroundColor: AllColors.WhiteColor,
 	},
 	item: {
 		paddingLeft: 15,
 		height: 40,
-		backgroundColor: 'rgba(230, 230, 230, 0.2)',
+		backgroundColor: AllColors.BackgroundSelect,
 		justifyContent: 'center',
 	},
 	text: {
 		fontSize: 16,
-		color: 'black',
+		color: AllColors.BlackColor,
 	},
 });
