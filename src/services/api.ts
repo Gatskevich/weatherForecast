@@ -38,7 +38,6 @@ export function getCurrentWeatherData(
 		})
 			.then((response: AxiosResponse) => {
 				const weather = parseDataWeather(response.data);
-
 				if (localType) {
 					dispatch(addLocalCurentWeather(weather));
 				} else {

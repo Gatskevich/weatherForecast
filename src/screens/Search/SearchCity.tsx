@@ -1,8 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { AxiosResponse } from 'axios';
-import React, { useCallback, useEffect } from 'react';
-import { FlatList, ImageBackground, SafeAreaView, View } from 'react-native';
+import React, { useCallback } from 'react';
+import { FlatList, ImageBackground, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import { assetList } from '../../assets';
@@ -11,6 +11,7 @@ import { Item } from '../../components/Item/Item';
 import {
 	getCoordinatesByLocation,
 	getCurrentWeatherData,
+	getThreeHoursWeatherData,
 } from '../../services/api';
 import {
 	ICityCoordinates,
@@ -46,6 +47,7 @@ export const SearchCity = () => {
 					} else {
 						await AsyncStorage.setItem('cities', JSON.stringify([coordinates]));
 					}
+					dispatch(getThreeHoursWeatherData(coordinates, false));
 					dispatch(getCurrentWeatherData(coordinates, false));
 					navigation.navigate('Main' as never);
 				})
