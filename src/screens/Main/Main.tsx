@@ -8,7 +8,10 @@ import {
 	ScrollView,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCurrentWeatherData } from '../../services/api';
+import {
+	getCurrentWeatherData,
+	getThreeHoursWeatherData,
+} from '../../services/api';
 import { AppDispatch, RootState } from '../../types/GeneralTypes';
 import { styles } from './styles';
 import Geolocation, {
@@ -20,14 +23,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { assetList } from '../../assets';
 import FastImage from 'react-native-fast-image';
 import { daysWeek, month } from '../../data/data';
-import { difineTimeDayPic } from '../../utils/commonFuctions';
-import { addAllCurentWeather } from '../../redux/actions';
+import { difineTimeDayPic, difineWeatherPic } from '../../utils/commonFuctions';
+import {
+	addAllCurentWeather,
+	addAllThreeHoursWeather,
+} from '../../redux/actions';
+import { TimeSwiper } from '../../components/TimeSwiper/TimeSwiper';
 
 export const Main = () => {
 	const [lengthCity, setLengthCity] = useState(0);
 	const dispatch: AppDispatch = useDispatch();
 	const citiesWeather = useSelector(
 		(state: RootState) => state.WeatherReducer.citiesWeather
+	);
+	const citiesThreeHoursWeather = useSelector(
+		(state: RootState) => state.WeatherReducer.citiesThreeHoursWeather
 	);
 
 	const getCurrentPositionInformation = async (): Promise<void> => {
@@ -39,6 +49,7 @@ export const Main = () => {
 						latitude,
 						longitude,
 					};
+					dispatch(getThreeHoursWeatherData(currentCoordinates, true));
 					dispatch(getCurrentWeatherData(currentCoordinates, true));
 				},
 				(error) => console.error(error),
@@ -55,6 +66,7 @@ export const Main = () => {
 			if (citiesWeather.length < citiesCoordinatesParse.length) {
 				await citiesCoordinatesParse.map(
 					(cityCoordinates: ICityCoordinates) => {
+						dispatch(getThreeHoursWeatherData(cityCoordinates, false));
 						dispatch(getCurrentWeatherData(cityCoordinates, false));
 					}
 				);
@@ -64,6 +76,7 @@ export const Main = () => {
 
 	const onRefresh = (): void => {
 		dispatch(addAllCurentWeather([]));
+		dispatch(addAllThreeHoursWeather([]));
 	};
 
 	useEffect(() => {
@@ -74,7 +87,7 @@ export const Main = () => {
 	}, [citiesWeather]);
 
 	const renderCitiesWeather = () => {
-		return citiesWeather.map((cityWeather: IWeather): JSX.Element => {
+		return citiesWeather.map((cityWeather: IWeather, index): JSX.Element => {
 			const date = new Date(new Date().getTime() + 1000 * cityWeather.timezone);
 			const fullDate = date.toISOString();
 			const nameWeek = daysWeek[date.getDay()];
@@ -100,7 +113,10 @@ export const Main = () => {
 						<View style={styles.mainTemp}>
 							<Image
 								style={styles.iconWeather}
-								source={assetList.icons.cloudy}
+								source={difineWeatherPic(
+									cityWeather.weather.clouds,
+									cityWeather.weather.main
+								)}
 							/>
 							<Text style={styles.textTemp}>
 								{cityWeather.weather.temperature}
@@ -123,6 +139,7 @@ export const Main = () => {
 							</Text>
 						</View>
 					</View>
+					<TimeSwiper cityThreeHours={citiesThreeHoursWeather[index]} />
 				</ImageBackground>
 			);
 		});
