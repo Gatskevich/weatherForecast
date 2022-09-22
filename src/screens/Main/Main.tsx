@@ -30,7 +30,7 @@ import { TimeSwiper } from '../../components/TimeSwiper/TimeSwiper';
 import { WeatherInformation } from '../../components/WeatherInformation/WeatherInformation';
 
 export const Main = () => {
-	const [citiesCoordinates, setCitiesCoordinates] = useState([]);
+	const [citiesCoordinates, setCitiesCoordinates] = useState(0);
 	const dispatch: AppDispatch = useDispatch();
 	const citiesWeather = useSelector(
 		(state: RootState) => state.WeatherReducer.citiesWeather
@@ -40,7 +40,7 @@ export const Main = () => {
 	);
 
 	const getCurrentPositionInformation = async (): Promise<void> => {
-		if (citiesWeather.length < citiesCoordinates.length + 1) {
+		if (citiesWeather.length < citiesCoordinates + 1) {
 			Geolocation.getCurrentPosition(
 				(position: GeolocationResponse) => {
 					const { latitude, longitude } = position.coords;
@@ -57,12 +57,17 @@ export const Main = () => {
 		}
 	};
 
-	const getCitiesCoordinates = (): void => {
-		if (citiesWeather.length < citiesCoordinates.length) {
-			citiesCoordinates.map((cityCoordinates: ICityCoordinates) => {
-				dispatch(getThreeHoursWeatherData(cityCoordinates, false));
-				dispatch(getCurrentWeatherData(cityCoordinates, false));
-			});
+	const getCitiesCoordinates = async (): Promise<void> => {
+		const citiesCoordinatesAsy = await AsyncStorage.getItem('cities');
+		if (citiesCoordinatesAsy) {
+			const citiesCoordinatesParse = JSON.parse(citiesCoordinatesAsy);
+			setCitiesCoordinates(citiesCoordinatesParse.length);
+			if (citiesWeather.length < citiesCoordinatesParse.length + 1) {
+				citiesCoordinatesParse.map((cityCoordinates: ICityCoordinates) => {
+					dispatch(getThreeHoursWeatherData(cityCoordinates, false));
+					dispatch(getCurrentWeatherData(cityCoordinates, false));
+				});
+			}
 		}
 	};
 
@@ -71,17 +76,8 @@ export const Main = () => {
 		dispatch(addAllThreeHoursWeather([]));
 	};
 
-	const getCoordinates = async (): Promise<void> => {
-		const citiesCoordinatesAsy = await AsyncStorage.getItem('cities');
-		if (citiesCoordinatesAsy) {
-			const citiesCoordinatesParse = JSON.parse(citiesCoordinatesAsy);
-			setCitiesCoordinates(citiesCoordinatesParse);
-		}
-	};
-
 	useEffect(() => {
 		if (citiesWeather.length === 0 && citiesThreeHoursWeather.length === 0) {
-			getCoordinates();
 			getCitiesCoordinates();
 			getCurrentPositionInformation();
 		}
@@ -113,14 +109,14 @@ export const Main = () => {
 	};
 
 	if (
-		citiesWeather.length < citiesCoordinates.length + 1 ||
-		citiesThreeHoursWeather.length < citiesCoordinates.length + 1 ||
+		citiesWeather.length < citiesCoordinates + 1 ||
+		citiesThreeHoursWeather.length < citiesCoordinates + 1 ||
 		citiesWeather.length !== citiesThreeHoursWeather.length
 	) {
 		return (
 			<View style={styles.noConten}>
 				<FastImage
-					style={styles.iamge}
+					style={styles.image}
 					source={assetList.gifs.weatherVane}
 					resizeMode={FastImage.resizeMode.contain}
 				/>

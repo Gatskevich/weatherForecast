@@ -30,7 +30,6 @@ export function getCurrentWeatherData(
 	localType: boolean
 ): AppAction {
 	const url = `${baseUrl}/data/2.5/weather?lat=${coordinates.latitude}&lon=${coordinates.longitude}&appid=${API_KEY}`;
-
 	return async (dispatch) => {
 		await axios({
 			method: reqType,
